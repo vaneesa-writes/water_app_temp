@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../utilities/get_prediction.dart';
+import '../utilities/sliderObjects.dart';
 
 class Prediction extends StatefulWidget {
   const Prediction({Key? key}) : super(key: key);
@@ -74,6 +76,43 @@ class _PredictionState extends State<Prediction> {
                           fontSize: 60,
                           color: Colors.white),
                       textAlign: TextAlign.center,
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(30, 3, 3, 30),
+                        // width: MediaQuery.of(context).size.width,
+                        // height: 60,
+                        color: Colors.black87,
+                        child: Center(
+                          child: Text(
+                            "Save",
+                            style: TextStyle(
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      onTap: () async {
+                        FirebaseFirestore.instance
+                            .collection("predictions")
+                            .add({
+                          "ph": sliderList[0].value,
+                          "Hardness": sliderList[1].value,
+                          "Solids": sliderList[2].value,
+                          "Chloramines": sliderList[3].value,
+                          "Sulfate": sliderList[4].value,
+                          "Conductivity": sliderList[5].value,
+                          "Organic_carbon": sliderList[6].value,
+                          "Trihalomethanes": sliderList[7].value,
+                          "Turbidity": sliderList[8].value,
+                          "Prediction": result.toString()
+                        }).then((value) {
+                          Navigator.pushNamed(context, 'home_screen');
+                        }).catchError((error) =>
+                                print("Failed to add new Node due to $error"));
+                      },
                     ),
                   ],
                 ),
